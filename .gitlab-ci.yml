@@ -1,27 +1,50 @@
+image: ubuntu:22.04
+
+variables:
+  ANDROID_COMPILE_SDK: "34"
+  ANDROID_BUILD_TOOLS: "34.0.0"
+  ANDROID_SDK_TOOLS: "11076708"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Xmx2048m"
+
 stages:
   - build
 
 build_android:
-  image: cimg/android:2024.01
   stage: build
-  variables:
-    GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
   before_script:
+    # Install dependencies
+    - apt-get update -qq && apt-get install -y -qq openjdk-17-jdk wget unzip > /dev/null
+    - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    - export PATH=$JAVA_HOME/bin:$PATH
+
+    # Install Android SDK
+    - export ANDROID_HOME="${PWD}/android-sdk"
+    - export PATH=$PATH:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools
+    - mkdir -p ${ANDROID_HOME}/cmdline-tools
+    - wget -q https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip -O cmdline-tools.zip
+    - unzip -q cmdline-tools.zip -d ${ANDROID_HOME}/cmdline-tools
+    - mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest
+
+    # Accept licenses and install SDK components
+    - yes | sdkmanager --licenses > /dev/null 2>&1 || true
+    - sdkmanager "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" > /dev/null
+
+    # Setup project
     - cd android
-    # Generate Gradle wrapper if not present
-    - gradle wrapper --gradle-version 8.2
+    - gradle wrapper --gradle-version 8.2 || (wget -q https://services.gradle.org/distributions/gradle-8.2-bin.zip -O /tmp/gradle.zip && unzip -q /tmp/gradle.zip -d /opt && /opt/gradle-8.2/bin/gradle wrapper --gradle-version 8.2)
     - chmod +x ./gradlew
+
   script:
-    - ./gradlew assembleDebug --stacktrace
+    - ./gradlew assembleDebug --stacktrace --no-daemon
+
   artifacts:
     paths:
       - android/app/build/outputs/apk/debug/app-debug.apk
     expire_in: 30 days
     name: "emoji-mosaic-${CI_COMMIT_SHORT_SHA}"
+
   cache:
-    key: android-gradle-${CI_COMMIT_REF_SLUG}
+    key: android-build-cache
     paths:
       - android/.gradle/
-      - android/build/
-      - android/app/build/
-  tags: []
+      - android-sdk/
