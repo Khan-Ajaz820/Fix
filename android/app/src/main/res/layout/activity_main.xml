@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#0F0C29"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="✨ Emoji Mosaic Generator"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btnPickImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="✨ Choose Image"
+        android:textSize="16sp"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="12dp"
+        android:backgroundTint="#8A2BE2" />
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select an image to generate mosaic"
+        android:textColor="#AAAAAA"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:indeterminateTint="#00D4FF" />
+
+    <ImageView
+        android:id="@+id/ivResult"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
+
+    <LinearLayout
+        android:id="@+id/layoutButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btnSave2K"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📥 Save 2K"
+            android:backgroundTint="#8A2BE2"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnSave4K"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💎 Save 4K"
+            android:backgroundTint="#FF6B6B" />
+    </LinearLayout>
+</LinearLayout>
