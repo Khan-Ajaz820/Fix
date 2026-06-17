@@ -33,6 +33,8 @@ jobs:
           zipStorePath=wrapper/dists
           EOF
           curl -sL https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradlew -o gradlew
+          curl -sL https://github.com/gradle/gradle/raw/v8.2.0/gradle/wrapper/gradle-wrapper.jar \
+            -o gradle/wrapper/gradle-wrapper.jar
           chmod +x gradlew
 
       - name: Build APK
