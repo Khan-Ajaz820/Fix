@@ -23,7 +23,10 @@ jobs:
 
       - name: Setup Gradle
         working-directory: ./android
-        run: gradle wrapper --gradle-version 8.2
+        run: |
+          gradle wrapper --gradle-version 8.2
+          # Force the wrapper properties to use exactly 8.2
+          sed -i 's|distributionUrl=.*|distributionUrl=https\\://services.gradle.org/distributions/gradle-8.2-bin.zip|' gradle/wrapper/gradle-wrapper.properties
 
       - name: Build APK
         working-directory: ./android
